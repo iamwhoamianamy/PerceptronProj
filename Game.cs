@@ -19,6 +19,7 @@ namespace PerceptronProj
       float mouseX = 0, mouseY = 0;
       Random random;
       Point[] trainingSet;
+      Perceptron brain;
 
       public Game(int width, int height, string title) :
            base(width, height, GraphicsMode.Default, title)
@@ -31,7 +32,7 @@ namespace PerceptronProj
          random = new Random();
          Help.SetDim(Width, Height);
 
-         trainingSet = Point.InitializeRandom(100, 0, Width);
+         ResetEverything();
 
          GL.Enable(EnableCap.PointSmooth);
 
@@ -61,17 +62,29 @@ namespace PerceptronProj
          // Showing training data
          foreach (var p in trainingSet)
          {
-            p.Show(5);
+            p.Draw(10);
          }
-
-         GL.Color4(Color4.White);
-         GL.Begin(PrimitiveType.Lines);
-
-         GL.Vertex2(0, 0);
-         GL.Vertex2(Width, Height);
 
          GL.End();
 
+         // Drawing perceptron output
+         GL.Color4(Color4.Green);
+         GL.LineWidth(1);
+         brain.Draw();
+
+         //// Drawing correct guesses
+         //foreach (var p in trainingSet)
+         //{
+
+         //   float[] inputs = { p.X, p.Y, 1.0f };
+         //   int guess = brain.Guess(inputs);
+
+         //   if (guess == p.Label)
+         //   {
+         //      GL.Color4(Color4.White);
+         //      Help.DrawRect(p.PixelX, p.PixelY, 10, 10);
+         //   }
+         //}
       }
 
       protected override void OnResize(EventArgs e)
@@ -86,6 +99,14 @@ namespace PerceptronProj
 
          Help.SetDim(Width, Height);
          base.OnResize(e);
+      }
+
+      private void ResetEverything()
+      {
+         float a = Help.RandInRange(-1.0f, 1.0f);
+         float b = Help.RandInRange(-1.0f, 1.0f);
+         trainingSet = Point.InitializeRandom(100, -1.0f, 1.0f, x => a * x + b);
+         brain = new Perceptron(3);
       }
    }
 }

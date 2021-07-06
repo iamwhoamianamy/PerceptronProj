@@ -13,7 +13,7 @@ namespace PerceptronProj
 {
    public static class Help
    {
-      public static Random random;
+      public static readonly Random random;
 
       public static float W { get; set; }
       public static float H { get; set; }
@@ -109,7 +109,7 @@ namespace PerceptronProj
 
       public static float RandInRange(float left, float right)
       {
-         return (float)(Help.random.NextDouble() * (right - left) + left);
+         return (float)(random.NextDouble() * (right - left) + left);
       }
 
       public static bool RandBool()
@@ -126,10 +126,10 @@ namespace PerceptronProj
       {
          return new Color4
          {
-            R = (float)Help.random.NextDouble(),
-            G = (float)Help.random.NextDouble(),
-            B = (float)Help.random.NextDouble(),
-            A = (float)Help.random.NextDouble()
+            R = (float)random.NextDouble(),
+            G = (float)random.NextDouble(),
+            B = (float)random.NextDouble(),
+            A = (float)random.NextDouble()
          };
       }
 
@@ -146,6 +146,15 @@ namespace PerceptronProj
       public static float Map(float val, float oldLower, float oldHigher, float newLower, float newHigher)
       {
          return (val - oldLower) / (oldHigher - oldLower) * (newHigher - newLower) + newLower;
+      }
+
+      public static float MapToScreenWidth(float val, float oldLower, float oldHigher)
+      {
+         return Map(val, oldLower, oldHigher, 0, W);
+      }
+      public static float MapToScreenHeight(float val, float oldLower, float oldHigher)
+      {
+         return Map(val, oldLower, oldHigher, 0, H);
       }
    }
 }

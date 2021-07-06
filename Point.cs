@@ -16,6 +16,9 @@ namespace PerceptronProj
    {
       public float X { get; set; }
       public float Y { get; set; }
+      public float PixelX => Help.MapToScreenWidth(X, -1, 1);
+      public float PixelY => Help.MapToScreenHeight(Y, -1, 1);
+
       public int Label { get; set; }
 
       public Point(float x, float y, int label)
@@ -25,7 +28,9 @@ namespace PerceptronProj
          Label = label;
       }
 
-      public static Point[] InitializeRandom(int n, float left, float right)
+      public delegate float LineFunction(float x);
+
+      public static Point[] InitializeRandom(int n, float left, float right, LineFunction f)
       {
          Point[] res = new Point[n];
 
@@ -34,18 +39,18 @@ namespace PerceptronProj
             float x = Help.RandInRange(left, right);
             float y = Help.RandInRange(left, right);
             
-            res[i] = new Point(x, y, y < x ? -1 : 1);
+            res[i] = new Point(x, y, y < f(x) ? -1 : 1);
          }
 
          return res;
       }
 
-      public void Show(float size)
+      public void Draw(float size)
       {
          GL.PointSize(size);
          GL.Color4(Label == 1 ? Color4.Red : Color4.Blue);
          GL.Begin(PrimitiveType.Points);
-         GL.Vertex2(X, Y);
+         GL.Vertex2(PixelX, PixelY);
          GL.End();
       }
    }

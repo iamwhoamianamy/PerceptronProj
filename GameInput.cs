@@ -18,8 +18,9 @@ namespace PerceptronProj
 
          switch (e.Key)
          {
-            case Key.C:
+            case Key.R:
             {
+               ResetEverything();
                break;
             }
          }
@@ -34,6 +35,11 @@ namespace PerceptronProj
          {
             case MouseButton.Left:
             {
+               foreach (var p in trainingSet)
+               {
+                  float[] inputs = { p.X, p.Y , 1.0f};
+                  brain.Train(inputs, p.Label);
+               }
                break;
             }
             case MouseButton.Right:

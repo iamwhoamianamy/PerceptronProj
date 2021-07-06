@@ -50,6 +50,7 @@
     <Compile Include="Game.cs" />
     <Compile Include="GameInput.cs" />
     <Compile Include="Help.cs" />
+    <Compile Include="Perceptron.cs" />
     <Compile Include="Point.cs" />
     <Compile Include="Program.cs" />
   </ItemGroup>
