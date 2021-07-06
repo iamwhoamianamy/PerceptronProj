@@ -14,8 +14,8 @@ namespace PerceptronProj
    class Perceptron
    {
       float[] weights;
-      private readonly float drawRes = 1.5f;
-      private readonly float learningRate = 0.01f;
+      private readonly float drawRes = 0.005f;
+      private readonly float learningRate = 0.001f;
 
       public Perceptron(int n)
       {
@@ -29,7 +29,15 @@ namespace PerceptronProj
 
       public float Funct(float x)
       {
-         return -(weights[2] / weights[1]) - (weights[0] / weights[1]) * x;
+         int n = weights.Length;
+         float sum = 0;
+
+         for (int i = 0; i < n - 1; i++)
+         {
+            sum += (float)Math.Pow(x, i) * weights[i];
+         }
+
+         return -sum / weights[n - 1];
       }
 
       public void Draw()

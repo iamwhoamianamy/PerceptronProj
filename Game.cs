@@ -20,6 +20,9 @@ namespace PerceptronProj
       Random random;
       Point[] trainingSet;
       Perceptron brain;
+      int perceptronN = 8;
+      int polynomN = 4;
+      bool train = true;
 
       public Game(int width, int height, string title) :
            base(width, height, GraphicsMode.Default, title)
@@ -42,17 +45,12 @@ namespace PerceptronProj
       protected override void OnRenderFrame(FrameEventArgs e)
       {
          GL.Clear(ClearBufferMask.ColorBufferBit);
-
-         UpdatePhysics();
+         if (train)
+            PerformTraining();
          Render();
 
          Context.SwapBuffers();
          base.OnRenderFrame(e);
-      }
-
-      private void UpdatePhysics()
-      {
-
       }
 
       private void Render()
@@ -62,7 +60,7 @@ namespace PerceptronProj
          // Showing training data
          foreach (var p in trainingSet)
          {
-            p.Draw(10);
+            p.Draw(5);
          }
 
          GL.End();
@@ -103,10 +101,36 @@ namespace PerceptronProj
 
       private void ResetEverything()
       {
-         float a = Help.RandInRange(-1.0f, 1.0f);
-         float b = Help.RandInRange(-1.0f, 1.0f);
-         trainingSet = Point.InitializeRandom(100, -1.0f, 1.0f, x => a * x + b);
-         brain = new Perceptron(3);
+         float[] polynomArgs = new float[polynomN];
+
+         for (int i = 0; i < polynomN; i++)
+         {
+            polynomArgs[i] = Help.RandInRange(-1.0f, 1.0f);
+         }
+
+         trainingSet = Point.InitializeRandom(200, -1.0f, 1.0f, polynomN, polynomArgs);
+         ResetPerceptron();
+      }
+
+      private void ResetPerceptron()
+      {
+         brain = new Perceptron(perceptronN + 1);
+      }
+
+      private void PerformTraining()
+      {
+         foreach (var p in trainingSet)
+         {
+            float[] inputs = new float[perceptronN + 1];
+
+            for (int i = 0; i < perceptronN; i++)
+            {
+               inputs[i] = (float)Math.Pow(p.X, i);
+            }
+            inputs[perceptronN] = p.Y;
+
+            brain.Train(inputs, p.Label);
+         }
       }
    }
 }

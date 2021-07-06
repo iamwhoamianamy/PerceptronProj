@@ -45,6 +45,22 @@ namespace PerceptronProj
          return res;
       }
 
+      public static Point[] InitializeRandom(int n, float left, float right, int polynomN, float[] polynomArgs)
+      {
+         Point[] res = new Point[n];
+
+         for (int i = 0; i < n; i++)
+         {
+            float x = Help.RandInRange(left, right);
+            float y = Help.RandInRange(left, right);
+
+            res[i] = new Point(x, y, y < Help.Polynom(x, polynomN, polynomArgs) ? -1 : 1);
+            //res[i] = new Point(x, y, x * x + y * y < 0.25 ? -1 : 1);
+         }
+
+         return res;
+      }
+
       public void Draw(float size)
       {
          GL.PointSize(size);

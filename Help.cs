@@ -98,7 +98,7 @@ namespace PerceptronProj
 
       public static Vector2 Limit(this Vector2 vec, float length)
       {
-         if(vec.LengthSquared >= length * length)
+         if (vec.LengthSquared >= length * length)
          {
             vec.Normalize();
             vec *= length;
@@ -155,6 +155,16 @@ namespace PerceptronProj
       public static float MapToScreenHeight(float val, float oldLower, float oldHigher)
       {
          return Map(val, oldLower, oldHigher, 0, H);
+      }
+
+      public static float Polynom(float x, int n, float[] args)
+      {
+         float sum = 0;
+
+         for (int i = 0; i < n; i++)
+            sum += (float)Math.Pow(x, i) * args[i];
+
+         return sum;
       }
    }
 }

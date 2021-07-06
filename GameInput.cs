@@ -21,6 +21,17 @@ namespace PerceptronProj
             case Key.R:
             {
                ResetEverything();
+               train = true;
+               break;
+            }
+            case Key.Space:
+            {
+               train = !train;
+               break;
+            }
+            case Key.C:
+            {
+               ResetPerceptron();
                break;
             }
          }
@@ -35,11 +46,7 @@ namespace PerceptronProj
          {
             case MouseButton.Left:
             {
-               foreach (var p in trainingSet)
-               {
-                  float[] inputs = { p.X, p.Y , 1.0f};
-                  brain.Train(inputs, p.Label);
-               }
+               PerformTraining();
                break;
             }
             case MouseButton.Right:
