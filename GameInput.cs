@@ -32,6 +32,7 @@ namespace PerceptronProj
             case Key.C:
             {
                ResetPerceptron();
+               train = true;
                break;
             }
          }

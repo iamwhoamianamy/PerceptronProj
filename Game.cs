@@ -20,9 +20,11 @@ namespace PerceptronProj
       Random random;
       Point[] trainingSet;
       Perceptron brain;
-      int perceptronN = 8;
-      int polynomN = 4;
       bool train = true;
+
+      int perceptronPolynomN = 8;
+      int testPolynomN = 8;
+      float[] testPolynomArgs;
 
       public Game(int width, int height, string title) :
            base(width, height, GraphicsMode.Default, title)
@@ -60,29 +62,17 @@ namespace PerceptronProj
          // Showing training data
          foreach (var p in trainingSet)
          {
-            p.Draw(5);
+            p.Draw(2);
          }
 
-         GL.End();
+         GL.Color4(Color4.Gray);
+         GL.LineWidth(1);
+         DrawTrainingSeparator();
 
          // Drawing perceptron output
          GL.Color4(Color4.Green);
-         GL.LineWidth(1);
+         GL.LineWidth(2);
          brain.Draw();
-
-         //// Drawing correct guesses
-         //foreach (var p in trainingSet)
-         //{
-
-         //   float[] inputs = { p.X, p.Y, 1.0f };
-         //   int guess = brain.Guess(inputs);
-
-         //   if (guess == p.Label)
-         //   {
-         //      GL.Color4(Color4.White);
-         //      Help.DrawRect(p.PixelX, p.PixelY, 10, 10);
-         //   }
-         //}
       }
 
       protected override void OnResize(EventArgs e)
@@ -101,33 +91,50 @@ namespace PerceptronProj
 
       private void ResetEverything()
       {
-         float[] polynomArgs = new float[polynomN];
+         testPolynomArgs = new float[testPolynomN + 1];
 
-         for (int i = 0; i < polynomN; i++)
+         for (int i = 0; i < testPolynomN + 1; i++)
          {
-            polynomArgs[i] = Help.RandInRange(-1.0f, 1.0f);
+            testPolynomArgs[i] = Help.RandInRange(-1.0f, 1.0f);
          }
 
-         trainingSet = Point.InitializeRandom(200, -1.0f, 1.0f, polynomN, polynomArgs);
+         trainingSet = Point.InitializeRandom(5000, -1.0f, 1.0f, testPolynomN + 1, testPolynomArgs);
          ResetPerceptron();
+      }
+
+      private void DrawTrainingSeparator()
+      {
+         GL.Begin(PrimitiveType.Lines);
+
+         float drawRes = 0.005f;
+         for (float x = -1.0f; x < 1.0f; x += drawRes)
+         {
+            var p = new Point(x, Help.Polynom(x, testPolynomN + 1, testPolynomArgs), 0);
+            GL.Vertex2(p.PixelX, p.PixelY);
+
+            p = new Point(x + drawRes, Help.Polynom(x + drawRes, testPolynomN + 1, testPolynomArgs), 0);
+            GL.Vertex2(p.PixelX, p.PixelY);
+         }
+
+         GL.End();
       }
 
       private void ResetPerceptron()
       {
-         brain = new Perceptron(perceptronN + 1);
+         brain = new Perceptron(perceptronPolynomN + 2);
       }
 
       private void PerformTraining()
       {
          foreach (var p in trainingSet)
          {
-            float[] inputs = new float[perceptronN + 1];
+            float[] inputs = new float[perceptronPolynomN + 2];
 
-            for (int i = 0; i < perceptronN; i++)
+            for (int i = 0; i < perceptronPolynomN + 1; i++)
             {
                inputs[i] = (float)Math.Pow(p.X, i);
             }
-            inputs[perceptronN] = p.Y;
+            inputs[perceptronPolynomN + 1] = p.Y;
 
             brain.Train(inputs, p.Label);
          }
